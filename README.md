@@ -170,12 +170,14 @@ microservice-backend/
 │   │   └── guards/
 │   │   │   └── jwt-auth.guard.ts
 │   │   └── interceptors/
-│   │       └── response-time.interceptor.ts
+│   │       ├── response-time.interceptor.ts
+│   │       └── sanitize.interceptor.ts.ts
 │   └── events/
 │       ├── rabbitmq.service.ts
 │       └── kafka.service.ts
 ├── test/
-│   └── app.e2e-spec.ts
+│   ├── app.e2e-spec.ts
+│   └── app.xss-spec.ts
 ├── .env
 ├── .dockerignore
 ├── Dockerfile
