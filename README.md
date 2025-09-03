@@ -187,6 +187,14 @@ microservice-backend/
 │   │       ├── health.module.ts
 │   │       └── health.controller.ts
 │   ├── common/
+│   │   ├── middlewares/
+│   │   │   └── cors.middleware.ts
+│   │   │   └── helmet.middleware.ts
+│   │   │   └── logger.middleware.ts
+│   │   │   └── request-id.middleware.ts
+│   │   ├── modules/
+│   │   │   └── database.module.ts
+│   │   │   └── static.module.ts
 │   │   ├── filters/
 │   │   │   └── http-exception.filter.ts
 │   │   └── guards/
@@ -200,10 +208,12 @@ microservice-backend/
 ├── test/
 │   ├── app.e2e-spec.ts
 │   └── app.xss-spec.ts
-├── .env
 ├── .dockerignore
-├── Dockerfile
+├── .env-example
+├── .gitignore
 ├── docker-compose.yml
+├── Dockerfile
+├── jest.config.js
 ├── package.json
 ├── tsconfig.json
 └── README.md
