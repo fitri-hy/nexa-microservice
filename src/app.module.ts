@@ -1,19 +1,22 @@
-import { Module } from '@nestjs/common';
+import { Request, Response, NextFunction } from 'express';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { ServeStaticModule } from '@nestjs/serve-static';
-import { join } from 'path';
+
+import { LoggerMiddleware } from './common/middlewares/logger.middleware';
+import { RequestIdMiddleware } from './common/middlewares/request-id.middleware';
+import { HelmetMiddleware } from './common/middlewares/helmet.middleware';
+import { CorsMiddleware } from './common/middlewares/cors.middleware';
 
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { HealthModule } from './modules/health/health.module';
-
 import { RedisModule } from './modules/redis/redis.module';
 import { CacheService } from './modules/cache/cache.service';
-
 import { EventsModule } from './events/events.module';
-
 import { TelemetryModule } from './telemetry/telemetry.module';
+
+import { DatabaseModule } from './common/modules/database.module';
+import { StaticModule } from './common/modules/static.module';
 
 import { databaseConfig } from './config/database.config';
 import { redisConfig } from './config/redis.config';
@@ -29,54 +32,17 @@ import { EnvValidationSchema } from './config/env.validation';
       load: [databaseConfig, redisConfig, rabbitmqConfig, kafkaConfig, jwtConfig],
       validationSchema: EnvValidationSchema,
     }),
-	
-	TelemetryModule.forRoot(process.env.TRACING === 'true'),
 
-	ServeStaticModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        let serveRoot = configService.get<string>('STATIC_ROOT') || '/';
-        if (!serveRoot.startsWith('/')) serveRoot = '/' + serveRoot;
+    TelemetryModule.forRoot(process.env.TRACING === 'true'),
 
-        const rootPath = join(process.cwd(), 'public');
-
-        return [
-          {
-            rootPath,
-            serveRoot,
-            serveStaticOptions: {
-              index: 'index.html',
-              redirect: false,
-            },
-          },
-        ];
-      },
-    }),
-
-    TypeOrmModule.forRootAsync({
-      imports: [ConfigModule],
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const db = configService.get<any>('database');
-        return {
-          type: db.type,
-          host: db.host,
-          port: db.port,
-          username: db.username,
-          password: db.password || undefined,
-          database: db.database,
-          autoLoadEntities: true,
-          synchronize: true,
-        };
-      },
-    }),
+    DatabaseModule,
+    StaticModule,
 
     RedisModule.forRoot(process.env.REDIS_ENABLED === 'true'),
     AuthModule,
     UsersModule,
     HealthModule,
-	EventsModule.forRoot(
+    EventsModule.forRoot(
       process.env.KAFKA_ENABLED === 'true',
       process.env.RABBITMQ_ENABLED === 'true',
     ),
@@ -84,4 +50,18 @@ import { EnvValidationSchema } from './config/env.validation';
   providers: [CacheService],
   exports: [CacheService],
 })
-export class AppModule {}
+export class AppModule implements NestModule {
+  constructor(private readonly configService: ConfigService) {}
+
+  configure(consumer: MiddlewareConsumer) {
+    consumer
+      .apply(
+        LoggerMiddleware,
+        RequestIdMiddleware,
+        HelmetMiddleware,
+        (req: Request, res: Response, next: NextFunction) =>
+          new CorsMiddleware(this.configService).use(req, res, next),
+      )
+      .forRoutes('*');
+  }
+}

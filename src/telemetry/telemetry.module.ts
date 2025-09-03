@@ -13,7 +13,7 @@ import * as path from 'path';
 
 const LOG_DIR = path.join(process.cwd(), 'logs');
 const LOG_FILE = path.join(LOG_DIR, 'otel-log.txt');
-const MAX_LINES = 100;
+const MAX_LINES = process.env.TRACING_LINES ? parseInt(process.env.TRACING_LINES, 10) : 100;
 
 class RollingFileExporter implements SpanExporter {
   export(spans: ReadableSpan[], resultCallback: (result: any) => void): void {

@@ -1,88 +1,39 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nexa Microservice</title>
-  <link rel="icon" type="image/png" href="/images/logo.png">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-    body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f9fafb;
-      color: #333;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      text-align: center;
-    }
-
-    .card {
-      background: #ffffff;
-      padding: 3rem;
-      border-radius: 1rem;
-      box-shadow: 0 10px 20px rgba(0,0,0,0.08);
-      max-width: 500px;
-      width: 90%;
-      transition: transform 0.2s ease;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-    }
-
-    .icon {
-      width: 150px;
-      height: 150px;
-      margin-bottom: 1.5rem;
-    }
-
-    h1 {
-      font-size: 2rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
-    }
-
-    p {
-      font-size: 1rem;
-      margin-bottom: 2rem;
-      color: #555;
-    }
-
-    .btn {
-      display: inline-block;
-      text-decoration: none;
-      padding: 0.75rem 1.5rem;
-      margin: 0.5rem;
-      border-radius: 0.5rem;
-      font-weight: 600;
-      transition: background 0.2s ease, color 0.2s ease;
-    }
-
-    .btn-primary {
-      background-color: #4f46e5;
-      color: #fff;
-    }
-
-    .btn-primary:hover {
-      background-color: #4338ca;
-    }
-  </style>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Nexa Microservice</title>
+	<link rel="icon" type="image/png" href="/images/logo.png">
+	<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+	<script src="https://cdn.tailwindcss.com"></script>
+	<style>
+		body {
+			font-family: 'Inter', sans-serif;
+		}
+	</style>
 </head>
-<body>
-  <div class="card">
-    <img src="/images/logo.png" alt="Nexa Icon" class="icon">
-    <h1>Welcome to Nexa!</h1>
-    <p>This is the default static page served from <code>/public</code>.</p>
-    <div>
-      <a href="https://github.com/fitri-hy/nexa-microservice" target="_blank" class="btn btn-primary">Github</a>
-    </div>
-  </div>
+<body class="h-screen w-full flex flex-col justify-center items-center p-4 bg-gradient-to-br from-sky-50/50 to-slate-50">
+	<div class="hover:scale-105 hover:duration-300 hover:transition-all max-w-md mx-auto flex flex-col justify-center items-center bg-white p-4 md:p-6 rounded-md hover:shadow-xl shadow-xl shadow-gray-300/50">
+		<img src="/images/logo.png" alt="Nexa Icon" class="w-24 h-24 mx-auto">
+		<h1 class="text-3xl font-bold mt-4">Welcome to 
+			<span class="text-blue-500">N</span><span class="text-yellow-500">exa</span>!
+		</h1>
+		
+		<div class="mt-2 flex flex-col gap-3 text-gray-800">
+			<p class="text-center">
+				Nexa is a modern NestJS microservice starter kit designed for rapid backend development.
+			</p>
+			<p class="text-center text-xs">
+				This is the default static page served from <code>/public</code>.
+			</p>
+		</div>
+		<div class="mt-6">
+			<a href="https://github.com/fitri-hy/nexa-microservice" target="_blank" class="inline-block text-white font-semibold bg-blue-500 hover:bg-blue-600 transition-colors px-4 py-2 rounded flex items-center gap-2">
+				Github
+				<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M6 18L18 6m0 0H9m9 0v9"/></svg>
+			</a>
+		</div>
+	</div>
 </body>
 </html>

@@ -1,37 +1,34 @@
 import * as dotenv from 'dotenv';
+import * as compression from 'compression';
 import { NestFactory } from '@nestjs/core';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
-import { ConfigService } from '@nestjs/config';
-import helmet from 'helmet';
-import * as compression from 'compression';
-import { ValidationPipe, Logger } from '@nestjs/common';
 import { SanitizeInterceptor } from './common/interceptors/sanitize.interceptor';
 
 dotenv.config();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { logger: ['error', 'warn', 'log'] });
-  const configService = app.get(ConfigService);
+  const enableLog = process.env.LOGGER === 'true';
+
+  const app = await NestFactory.create(AppModule, {
+    logger: enableLog ? ['error', 'warn', 'log'] : false,
+  });
+
   const logger = new Logger('Bootstrap');
 
-  app.use(helmet());
   app.use(compression());
 
-  app.useGlobalPipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }));
+  app.useGlobalPipes(
+    new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }),
+  );
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new SanitizeInterceptor());
 
-  app.enableCors({
-    origin: (configService.get<string>('CORS_ORIGIN') || 'http://localhost:3000').split(','),
-    methods: configService.get<string>('CORS_METHODS') || 'GET,POST,PUT,DELETE',
-    credentials: configService.get<boolean>('CORS_CREDENTIALS') ?? true,
-  });
-
-  const port = configService.get<number>('PORT') || 3000;
+  const port = process.env.PORT || 3000;
   await app.listen(port);
 
-  logger.log(`Application is running on: ${await app.getUrl()}`);
+  if (enableLog) logger.log(`Application is running on: ${await app.getUrl()}`);
 }
 
 bootstrap();
