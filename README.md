@@ -106,25 +106,43 @@ npm run test:e2e
 ## Environment Variables
 
 ```env
-DB_TYPE=mysql						# postgres or mysql
-DB_HOST=localhost
-DB_PORT=3306						# 5432 Postgres or 3306 MySQL
-DB_USER=db_username
-DB_PASS=db_password
-DB_NAME=db_name
+PORT=3000
+LOGGER=true
+CORS_ORIGIN=http://localhost:3000,http://localhost:4200
+CORS_METHODS=GET,POST,PUT,DELETE
+CORS_CREDENTIALS=true
 
+DB_TYPE=postgres						# postgres or mysql
+DB_HOST=localhost
+DB_PORT=5432						    # 5432 Postgres or 3306 MySQL
+DB_USER=postgres_username
+DB_PASS=postgres_password
+DB_NAME=postgres_dbname
+
+STATIC_ROOT=/
+
+REDIS_ENABLED=false
+REDIS_DUMMY=true
 REDIS_HOST=localhost
 REDIS_PORT=6379
 
+RABBITMQ_ENABLED=false
+RABBITMQ_DUMMY=true
 RABBITMQ_URI=amqp://localhost:5672
 RABBITMQ_QUEUE=default_queue
 
+KAFKA_ENABLED=false
+KAFKA_DUMMY=true
+KAFKA_CLIENTID=nexa-client
 KAFKA_BROKERS=localhost:9092
-KAFKA_CLIENT_ID=microservice-backend
+KAFKA_GROUPID=nexa-group
+KAFKAJS_NO_PARTITIONER_WARNING=1
 
 JWT_SECRET=mysecret
 JWT_EXPIRES_IN=3600s
 
+TRACING=true
+TRACING_LINES=200
 ```
 
 ---
