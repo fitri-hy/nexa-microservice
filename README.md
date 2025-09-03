@@ -45,6 +45,12 @@ With flexible database support (MySQL or PostgreSQL) and ready-to-use Docker con
 
 * Joi
 
+### Security
+
+* Helmet
+* XSS Sanitization (SanitizeInterceptor)
+* Global Input Validation
+
 ### Testing
 
 * Jest
@@ -162,7 +168,9 @@ microservice-backend/
 │   │   ├── filters/
 │   │   │   └── http-exception.filter.ts
 │   │   └── guards/
-│   │       └── jwt-auth.guard.ts
+│   │   │   └── jwt-auth.guard.ts
+│   │   └── interceptors/
+│   │       └── response-time.interceptor.ts
 │   └── events/
 │       ├── rabbitmq.service.ts
 │       └── kafka.service.ts

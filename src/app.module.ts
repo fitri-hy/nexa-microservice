@@ -28,7 +28,7 @@ import { EnvValidationSchema } from './config/env.validation';
           host: db.host,
           port: db.port,
           username: db.username,
-          password: db.password,
+          password: db.password || undefined,
           database: db.database,
           autoLoadEntities: true,
           synchronize: true,
