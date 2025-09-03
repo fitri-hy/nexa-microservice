@@ -51,6 +51,10 @@ With flexible database support (MySQL or PostgreSQL) and ready-to-use Docker con
 * XSS Sanitization (SanitizeInterceptor)
 * Global Input Validation
 
+### Observability & Monitoring
+
+* Tracing (OpenTelemetry)
+
 ### Testing
 
 * Jest

@@ -8,6 +8,13 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { HealthModule } from './modules/health/health.module';
 
+import { RedisModule } from './modules/redis/redis.module';
+import { CacheService } from './modules/cache/cache.service';
+
+import { EventsModule } from './events/events.module';
+
+import { TelemetryModule } from './telemetry/telemetry.module';
+
 import { databaseConfig } from './config/database.config';
 import { redisConfig } from './config/redis.config';
 import { rabbitmqConfig } from './config/rabbitmq.config';
@@ -22,6 +29,8 @@ import { EnvValidationSchema } from './config/env.validation';
       load: [databaseConfig, redisConfig, rabbitmqConfig, kafkaConfig, jwtConfig],
       validationSchema: EnvValidationSchema,
     }),
+	
+	TelemetryModule.forRoot(process.env.TRACING === 'true'),
 
 	ServeStaticModule.forRootAsync({
       imports: [ConfigModule],
@@ -63,9 +72,16 @@ import { EnvValidationSchema } from './config/env.validation';
       },
     }),
 
+    RedisModule.forRoot(process.env.REDIS_ENABLED === 'true'),
     AuthModule,
     UsersModule,
     HealthModule,
+	EventsModule.forRoot(
+      process.env.KAFKA_ENABLED === 'true',
+      process.env.RABBITMQ_ENABLED === 'true',
+    ),
   ],
+  providers: [CacheService],
+  exports: [CacheService],
 })
 export class AppModule {}

@@ -5,25 +5,20 @@ import { HttpExceptionFilter } from './common/filters/http-exception.filter';
 import { ConfigService } from '@nestjs/config';
 import helmet from 'helmet';
 import * as compression from 'compression';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import { SanitizeInterceptor } from './common/interceptors/sanitize.interceptor';
 
 dotenv.config();
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { logger: ['error', 'warn', 'log'] });
   const configService = app.get(ConfigService);
+  const logger = new Logger('Bootstrap');
 
   app.use(helmet());
   app.use(compression());
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      transform: true,
-      transformOptions: { enableImplicitConversion: true },
-    }),
-  );
-
+  app.useGlobalPipes(new ValidationPipe({ transform: true, transformOptions: { enableImplicitConversion: true } }));
   app.useGlobalFilters(new HttpExceptionFilter());
   app.useGlobalInterceptors(new SanitizeInterceptor());
 
@@ -35,7 +30,8 @@ async function bootstrap() {
 
   const port = configService.get<number>('PORT') || 3000;
   await app.listen(port);
-  console.log(`Application is running on: ${await app.getUrl()}`);
+
+  logger.log(`Application is running on: ${await app.getUrl()}`);
 }
 
 bootstrap();
