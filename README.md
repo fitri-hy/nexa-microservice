@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="./logo.png" alt="Nexa" width="250"/>
+  <img src="./public/images/logo.png" alt="Nexa" width="250"/>
 </p>
 
 # Nexa (Starter Kit)

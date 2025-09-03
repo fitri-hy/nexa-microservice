@@ -1,9 +1,13 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
+
 import { AuthModule } from './modules/auth/auth.module';
 import { UsersModule } from './modules/users/users.module';
 import { HealthModule } from './modules/health/health.module';
+
 import { databaseConfig } from './config/database.config';
 import { redisConfig } from './config/redis.config';
 import { rabbitmqConfig } from './config/rabbitmq.config';
@@ -18,6 +22,29 @@ import { EnvValidationSchema } from './config/env.validation';
       load: [databaseConfig, redisConfig, rabbitmqConfig, kafkaConfig, jwtConfig],
       validationSchema: EnvValidationSchema,
     }),
+
+	ServeStaticModule.forRootAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        let serveRoot = configService.get<string>('STATIC_ROOT') || '/';
+        if (!serveRoot.startsWith('/')) serveRoot = '/' + serveRoot;
+
+        const rootPath = join(process.cwd(), 'public');
+
+        return [
+          {
+            rootPath,
+            serveRoot,
+            serveStaticOptions: {
+              index: 'index.html',
+              redirect: false,
+            },
+          },
+        ];
+      },
+    }),
+
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -35,6 +62,7 @@ import { EnvValidationSchema } from './config/env.validation';
         };
       },
     }),
+
     AuthModule,
     UsersModule,
     HealthModule,
