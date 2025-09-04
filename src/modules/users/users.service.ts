@@ -1,6 +1,12 @@
+// Practice Simulation //
+// =================== //
+
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { User } from './users.entity';
 import { CreateUserDto } from './users.dto';
+
+// Prometheus Metrics
+import { userCreatedCounter } from '../../telemetry/telemetry.module';
 
 @Injectable()
 export class UsersService {
@@ -28,6 +34,10 @@ export class UsersService {
     };
 
     this.users.push(newUser);
+
+    // --- Catat metric user baru ---
+    userCreatedCounter.inc();
+
     return newUser;
   }
 }

@@ -2,28 +2,30 @@ import { Request, Response, NextFunction } from 'express';
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
-import { LoggerMiddleware } from './common/middlewares/logger.middleware';
-import { RequestIdMiddleware } from './common/middlewares/request-id.middleware';
-import { HelmetMiddleware } from './common/middlewares/helmet.middleware';
-import { CorsMiddleware } from './common/middlewares/cors.middleware';
-
-import { AuthModule } from './modules/auth/auth.module';
-import { UsersModule } from './modules/users/users.module';
-import { HealthModule } from './modules/health/health.module';
-import { RedisModule } from './modules/redis/redis.module';
-import { CacheService } from './modules/cache/cache.service';
-import { EventsModule } from './events/events.module';
-import { TelemetryModule } from './telemetry/telemetry.module';
-
-import { DatabaseModule } from './common/modules/database.module';
-import { StaticModule } from './common/modules/static.module';
-
 import { databaseConfig } from './config/database.config';
 import { redisConfig } from './config/redis.config';
 import { rabbitmqConfig } from './config/rabbitmq.config';
 import { kafkaConfig } from './config/kafka.config';
 import { jwtConfig } from './config/jwt.config';
 import { EnvValidationSchema } from './config/env.validation';
+
+import { LoggerMiddleware } from './common/middlewares/logger.middleware';
+import { RequestIdMiddleware } from './common/middlewares/request-id.middleware';
+import { HelmetMiddleware } from './common/middlewares/helmet.middleware';
+import { CorsMiddleware } from './common/middlewares/cors.middleware';
+
+import { DatabaseModule } from './common/modules/database.module';
+import { StaticModule } from './common/modules/static.module';
+
+import { AuthModule } from './modules/auth/auth.module';
+import { UsersModule } from './modules/users/users.module';
+import { HealthModule } from './modules/health/health.module';
+import { RedisModule } from './modules/redis/redis.module';
+import { CacheService } from './modules/cache/cache.service';
+
+import { EventsModule } from './events/events.module';
+
+import { TelemetryModule } from './telemetry/telemetry.module';
 
 @Module({
   imports: [
@@ -35,7 +37,7 @@ import { EnvValidationSchema } from './config/env.validation';
 
     TelemetryModule.forRoot(process.env.TRACING === 'true'),
 
-    DatabaseModule,
+    DatabaseModule.forRoot(process.env.DB_ENABLED === 'true'),
     StaticModule,
 
     RedisModule.forRoot(process.env.REDIS_ENABLED === 'true'),

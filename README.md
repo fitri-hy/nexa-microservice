@@ -54,6 +54,7 @@ With flexible database support (MySQL or PostgreSQL) and ready-to-use Docker con
 ### Observability & Monitoring
 
 * Tracing (OpenTelemetry)
+* Prometheus Metrics
 
 ### Testing
 
@@ -112,6 +113,7 @@ CORS_ORIGIN=http://localhost:3000,http://localhost:4200
 CORS_METHODS=GET,POST,PUT,DELETE
 CORS_CREDENTIALS=true
 
+DB_ENABLED=false
 DB_TYPE=postgres						# postgres or mysql
 DB_HOST=localhost
 DB_PORT=5432						    # 5432 Postgres or 3306 MySQL
@@ -156,77 +158,18 @@ TRACING_LINES=200
 | Users  | `/users`      | POST   |
 | Health | `/health`     | GET    |
 
----
-
-## Folder Stucture
-
-```
-microservice-backend/
-├── src/
-│   ├── app.module.ts
-│   ├── main.ts
-│   ├── config/
-│   │   ├── database.config.ts
-│   │   ├── redis.config.ts
-│   │   ├── rabbitmq.config.ts
-│   │   ├── kafka.config.ts
-│   │   ├── jwt.config.ts
-│   │   └── env.validation.ts
-│   ├── modules/
-│   │   ├── auth/
-│   │   │   ├── auth.module.ts
-│   │   │   ├── auth.service.ts
-│   │   │   ├── auth.controller.ts
-│   │   │   └── jwt.strategy.ts
-│   │   ├── users/
-│   │   │   ├── users.module.ts
-│   │   │   ├── users.service.ts
-│   │   │   ├── users.controller.ts
-│   │   │   └── users.entity.ts
-│   │   └── health/
-│   │       ├── health.module.ts
-│   │       └── health.controller.ts
-│   ├── common/
-│   │   ├── middlewares/
-│   │   │   └── cors.middleware.ts
-│   │   │   └── helmet.middleware.ts
-│   │   │   └── logger.middleware.ts
-│   │   │   └── request-id.middleware.ts
-│   │   ├── modules/
-│   │   │   └── database.module.ts
-│   │   │   └── static.module.ts
-│   │   ├── filters/
-│   │   │   └── http-exception.filter.ts
-│   │   └── guards/
-│   │   │   └── jwt-auth.guard.ts
-│   │   └── interceptors/
-│   │       ├── response-time.interceptor.ts
-│   │       └── sanitize.interceptor.ts.ts
-│   └── events/
-│       ├── rabbitmq.service.ts
-│       └── kafka.service.ts
-├── test/
-│   ├── app.e2e-spec.ts
-│   └── app.xss-spec.ts
-├── .dockerignore
-├── .env-example
-├── .gitignore
-├── docker-compose.yml
-├── Dockerfile
-├── jest.config.js
-├── package.json
-├── tsconfig.json
-└── README.md
-```
-
----
-
 ## Testing
 
 Health Check:
 
 ```bash
 curl http://localhost:3000/health
+```
+
+Prometheus Metrics: 
+
+```bash
+curl http://localhost:3000/metrics
 ```
 
 Create User:
@@ -250,6 +193,74 @@ Access Protected Endpoint:
 ```bash
 curl http://localhost:3000/users \
   -H "Authorization: Bearer JWT_TOKEN_HERE"
+```
+
+---
+
+
+## Folder Stucture
+
+```
+microservice-backend/
+├── src/
+│   ├── app.module.ts
+│   ├── main.ts
+│   ├── config/
+│   │   ├── database.config.ts
+│   │   ├── redis.config.ts
+│   │   ├── rabbitmq.config.ts
+│   │   ├── kafka.config.ts
+│   │   ├── jwt.config.ts
+│   │   └── env.validation.ts
+│   ├── modules/
+│   │   ├── auth/
+│   │   │   ├── auth.dto.ts
+│   │   │   ├── auth.module.ts
+│   │   │   ├── auth.service.ts
+│   │   │   ├── auth.controller.ts
+│   │   │   └── jwt.strategy.ts
+│   │   ├── users/
+│   │   │   ├── users.dto.ts
+│   │   │   ├── users.module.ts
+│   │   │   ├── users.service.ts
+│   │   │   ├── users.controller.ts
+│   │   │   └── users.entity.ts
+│   │   └── health/
+│   │       ├── health.module.ts
+│   │       └── health.controller.ts
+│   ├── common/
+│   │   ├── middlewares/
+│   │   │   └── cors.middleware.ts
+│   │   │   └── helmet.middleware.ts
+│   │   │   └── logger.middleware.ts
+│   │   │   └── request-id.middleware.ts
+│   │   ├── modules/
+│   │   │   └── database.module.ts
+│   │   │   └── static.module.ts
+│   │   ├── filters/
+│   │   │   └── http-exception.filter.ts
+│   │   └── guards/
+│   │   │   └── jwt-auth.guard.ts
+│   │   └── interceptors/
+│   │       ├── response-time.interceptor.ts
+│   │       └── sanitize.interceptor.ts.ts
+│   │── events/
+│   │   ├── rabbitmq.service.ts
+│   │   └── kafka.service.ts
+│   └── telementry/
+│       └── telemetry.module.ts
+├── test/
+│   ├── app.e2e-spec.ts
+│   └── app.xss-spec.ts
+├── .dockerignore
+├── .env-example
+├── .gitignore
+├── docker-compose.yml
+├── Dockerfile
+├── jest.config.js
+├── package.json
+├── tsconfig.json
+└── README.md
 ```
 
 ---
