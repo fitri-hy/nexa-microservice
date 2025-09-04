@@ -151,12 +151,13 @@ TRACING_LINES=200
 
 ## API Endpoints
 
-| Module | Endpoint      | Method |
-| ------ | ------------- | ------ |
-| Auth   | `/auth/login` | POST   |
-| Users  | `/users`      | GET    |
-| Users  | `/users`      | POST   |
-| Health | `/health`     | GET    |
+| Module  | Endpoint        | Method |
+| ------- | --------------- | ------ |
+| Auth    | `/auth/login`   | POST   |
+| Users   | `/users`        | GET    |
+| Users   | `/users`        | POST   |
+| Metrics | `/metrics`      | GET    |
+| Health  | `/health`       | GET    |
 
 ## Testing
 
